@@ -21,6 +21,8 @@ pipeline {
     }
     success {
       sh 'oc expose service redis'
+      sh 'oc status'
+      sh 'oc get all'
       echo 'SUCCESS'
     }
   }
