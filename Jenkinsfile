@@ -1,29 +1,10 @@
 pipeline {
-  triggers {
-    cron ('H/5 * * * *')
-  }
-  agent {
-    node {
-      label 'nodejs'
+    agent { docker { image 'maven:3.8.6-openjdk-11-slim' } }
+    stages {
+        stage('build') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
     }
-  }
-  stages {
-    stage ('Creating a new redis application') {
-      steps {
-        sh 'oc new-app --name redis docker.io/shady4u/redis'
-      }
-    }
-  }
-  post {
-    failure {
-      echo 'FAILED'
-      sh 'oc status'
-    }
-    success {
-      sh 'oc expose service redis'
-      sh 'oc status'
-      sh 'oc get all'
-      echo 'SUCCESS'
-    }
-  }
 }
